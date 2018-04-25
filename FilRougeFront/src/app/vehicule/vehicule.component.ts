@@ -4,7 +4,8 @@ import {
   MatTableDataSource,
   MatDialog,
   MatDialogConfig,
-  MatSort
+  MatSort,
+  MatSnackBar
 } from '@angular/material';
 import { AffaireService } from '../affaire.service';
 import { VehiculeService } from '../vehicule.service';
@@ -29,6 +30,7 @@ export class VehiculeComponent implements OnInit {
   edition = false;
 
   constructor(
+    private snackBar:MatSnackBar,
     private vehiculeService: VehiculeService,
     private armeService: ArmesService,
     public dialog: MatDialog,
@@ -95,8 +97,17 @@ export class VehiculeComponent implements OnInit {
     if (this.edition) {
       this.vehiculeService.updateVehicule(this.vehi).subscribe();
     } else {
-      this.vehiculeService.createVehicule(this.vehi).subscribe();
+      this.vehiculeService.createVehicule(this.vehi).subscribe(
+        result=> {this.afficherMessage('Enregistrement effectué', '')},
+        error => {this.afficherMessage('', 'Vehicule déjà présent'); }
+      );
     }
+  }
+
+  afficherMessage(message:string, erreur: string){
+    this.snackBar.open(message,erreur, {
+      duration: 2000,
+    });
   }
 
   deleteAffaire() {
