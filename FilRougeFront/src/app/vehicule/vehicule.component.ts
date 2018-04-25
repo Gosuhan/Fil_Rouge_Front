@@ -95,7 +95,10 @@ export class VehiculeComponent implements OnInit {
 
   onSubmit() {
     if (this.edition) {
-      this.vehiculeService.updateVehicule(this.vehi).subscribe();
+      this.vehiculeService.updateVehicule(this.vehi).subscribe(
+        result=> {this.afficherMessage('Enregistrement effectué', '')},
+        error => {this.afficherMessage('', 'Vehicule déjà présent'); }
+      );
     } else {
       this.vehiculeService.createVehicule(this.vehi).subscribe(
         result=> {this.afficherMessage('Enregistrement effectué', '')},
